@@ -15,4 +15,11 @@ describe Frest::RichFunction do
     g = f.call(a: 'A')
     expect(g.call(b: 'B')).to eq(['A', 'B'])
   end
+
+  it 'returns the params for an enriched function' do
+    f = Frest::RichFunction.enrich(fn: ->(a:, b:){[a, b]})
+    expect(Frest::RichFunction.params(fn: f)).to eq([[:keyreq, :a], [:keyreq, :b]] )
+    g = f.call(a: 1)
+    expect(Frest::RichFunction.params(fn: g)).to eq([[:keyreq, :b]])
+  end
 end
