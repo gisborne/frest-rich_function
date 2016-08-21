@@ -22,4 +22,11 @@ describe Frest::RichFunction do
     g = f.call(a: 1)
     expect(Frest::RichFunction.params(fn: g)).to eq([[:keyreq, :b]])
   end
+
+  #Test https://bugs.ruby-lang.org/issues/10856
+  it 'can call a rich function with empty args' do
+    f = Frest::RichFunction.enrich(fn: ->(){:ok})
+    args = {}
+    expect(f.call(**args)).to eq(:ok)
+  end
 end

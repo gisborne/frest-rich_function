@@ -8,7 +8,12 @@ module Frest
     def enrich fn:
       result = ->(**args){
         begin
-          fn.call(**args)
+          #workaround for https://bugs.ruby-lang.org/issues/10856
+          if args.empty?
+            fn.call
+          else
+            fn.call(**args)
+          end
         rescue ArgumentError
           result2 = ->(**args2){fn.call(**(args.merge(args2)))}
           @enriched[result2] = fn.parameters.reject{|_, v| args.has_key? v}
